@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://kit.fontawesome.com/9b14ef0212.js"
+      crossorigin="anonymous"
+    ></script>
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Metal+Mania&display=swap" rel="stylesheet">
+  </head>
+
+  <style>
+    *{
+    overflow: hidden;
+        margin: 0;
+        padding: 0;
+
+  font-family: "Metal Mania", system-ui;
+  font-weight: 400;
+  font-style: normal;
+
+
+    }
+    #loadingCont{
+        position: absolute;
+        top: 0;
+        z-index: 100;
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        place-items: center;
+        background-color: rgb(0, 0, 0);
+        /* background-color: rgb(49, 49, 49); */
+        transition: all linear .5s;
+    }
+    #loading{
+        color: white;
+        font-size: 2rem;
+    }
+    #info{
+      display: none;
+      place-items: center;
+    }
+    #info button{
+      font-size: 3rem;
+      background-color: transparent;
+      cursor: pointer;
+      transition: all ease-in .2s;
+      border: 2px solid white;
+      border-radius: 20px;
+      color: white;
+      padding: 5px 20px 5px 20px;
+    }
+    #info button:hover{
+      padding: 5px 120px 5px 120px;
+
+    }
+    #info p{
+      margin-top: 3rem;
+      color: white;
+font-size: 2rem;
+
+    }
+    #canvas{
+        z-index: 90;
+    }
+
+    #nav{
+      /* width: 100vw; */
+      position: absolute;
+      top: 0;
+      right: 1.5rem;
+      z-index: 91;
+      display: flex;
+      /* border: 2px solid red; */
+
+    }
+    #tracking{
+      /* display: none; */
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+      margin-right: 1.5rem;
+      opacity: .5;
+    }
+    #tracking p{
+      font-size:1.5rem;
+      text-align: center;
+    }
+    #vol{
+      opacity: 1;
+      /* display: none; */
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+    #vol p{
+      font-size:1.5rem;
+     text-align: center;
+    }
+    #pp{
+      color: white;
+      font-size: 3rem;
+    }
+  </style>
+  <body>
+
+    <div id="loadingCont">
+        <p id="loading">0%</p>
+
+        <div id="info">
+          <button id="enter">Enter</button>
+          <p>Explore this infinite road full of adventure!!</p>
+          <p>Click on <i class="fa-solid fa-vr-cardboard"></i> icon to start face tracking movement.</p>
+          <p>Tilt your head to move the camera up,down,right,left or front.</p>
+        </div>
+    </div>
+
+    <div id="nav">
+
+      <div id="tracking">
+        <i class="fa-solid fa-vr-cardboard"></i>
+        <p id="trackingP">OFF</p>
+      </div>
+
+      <div id="vol">
+        <i class="fa-solid fa-volume-high"></i>
+        <p id="volP">ON</p>
+      </div>
+
+    </div>
+    
+    
+    <!-- <div>Teachable Machine Pose Model</div> -->
+      <!-- <button type="button" onclick="init()">Start</button> -->
+      
+      <!-- <div><canvas id="camCanvas"></canvas></div> -->
+      
+      <!-- <div id="label-container"></div> -->
+      
+      <div id="canvas"></div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.156.1/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/loaders/DRACOLoader.js"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/js/loaders/DRACOLoader.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.138.0/examples/js/libs/draco/draco_decoder.js"></script> -->
+
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/three-css2drender-types@1.0.3/CSS2DRenderer.min.js"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/css2drenderer"></script> -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/renderers/CSS2DRenderer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.130.1/examples/js/loaders/RGBELoader.js"></script>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/postprocessing/RenderPass"></script> -->
+  <!-- <script src="https://cdn.jsdelivr.net/npm/three@0.134.0/examples/js/postprocessing/EffectComposer"></script> -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/Tween.min.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.9/dat.gui.min.js" integrity="sha512-WoO4Ih0CDOSLYafy22wZD/mcJ7k0ESLqtQsFa6zFKnEUrbtuGU+GkLtVhgt93xa2qewG5gKEC6CWlN8OaCTSVg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/script.js"></script>
+</html>
