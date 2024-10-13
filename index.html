@@ -36,14 +36,21 @@
         background-color: rgb(0, 0, 0);
         /* background-color: rgb(49, 49, 49); */
         transition: all linear .5s;
+        /* z-index: 1; */
+        background: url('./halloween_bg2.png') no-repeat center;
+        background-size: cover;
     }
     #loading{
         color: white;
         font-size: 2rem;
+        z-index: 2;
+
     }
     #info{
       display: none;
       place-items: center;
+      z-index: 2;
+
     }
     #info button{
       font-size: 3rem;
@@ -63,6 +70,7 @@
       margin-top: 3rem;
       color: white;
 font-size: 2rem;
+text-align: center;
 
     }
     #canvas{
@@ -106,17 +114,28 @@ font-size: 2rem;
       color: white;
       font-size: 3rem;
     }
+    /* .img{
+      position: absolute;
+      top: 0;
+      transform: translateY(-25%);
+      width: 100vw;
+      z-index: 1;
+      opacity: .7;
+      filter: grayscale(50%);
+    } */
   </style>
   <body>
 
     <div id="loadingCont">
-        <p id="loading">0%</p>
+      <!-- <img class="img" src="/halloween_bg.webp" alt=""> -->
+
+        <p id="loading">Loading 0%</p>
 
         <div id="info">
           <button id="enter">Enter</button>
-          <p>Explore this infinite road full of adventure!!</p>
+          <p>Explore this infinite Halloween road full of adventure!!</p>
           <p>Click on <i class="fa-solid fa-vr-cardboard"></i> icon to start face tracking movement.</p>
-          <p>Tilt your head to move the camera up,down,right,left or front.</p>
+          <p>Tilt your head to move the camera right, left, down or front.</p>
         </div>
     </div>
 

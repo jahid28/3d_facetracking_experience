@@ -26,7 +26,7 @@ const camera = new THREE.PerspectiveCamera(
 );
 camera.position.set(7, 2, 0);
 
-// const axis = new THREE.AxesHelper(20);
+// const axis = new THREE.AxesHelper(200);
 // scene.add(axis);
 
 // const orbit = new THREE.OrbitControls(camera, renderer.domElement);
@@ -34,6 +34,7 @@ camera.position.set(7, 2, 0);
 
 // const ambientLight = new THREE.AmbientLight("white");
 // scene.add(ambientLight);
+
 
 const spotLight = new THREE.SpotLight("white");
 spotLight.power = 320;
@@ -46,10 +47,10 @@ spotLight.lookAt(0, 4, 0);
 // const pLight = new THREE.PointLight("white");
 // pLight.power = 30000;
 // scene.add(pLight);
-// // spotLight.distance = 28;
+// spotLight.distance = 28;
 // pLight.position.set(-10, 20, 0);
-// // spotLight.angle = Math.PI / 2;
-// spotLight.lookAt(0, 4, 0);
+// spotLight.angle = Math.PI / 2;
+spotLight.lookAt(0, 4, 0);
 
 const lightHolder = new THREE.Object3D(); // Create a container object
 
@@ -62,7 +63,8 @@ const loadingManager = new THREE.LoadingManager();
 const loader = new THREE.GLTFLoader(loadingManager);
 
 let model1;
-loader.load("./models/3d_exp.glb", function (gltf) {
+loader.load("./models/3d_experience3.glb", function (gltf) {
+  // console.log('ppp',gltf.scene);
   model1 = gltf.scene;
   scene.add(model1);
   model1.scale.set(0.5, 0.5, 0.5);
@@ -70,7 +72,7 @@ loader.load("./models/3d_exp.glb", function (gltf) {
 });
 
 let model2;
-loader.load("./models/3d_exp.glb", function (gltf) {
+loader.load("./models/3d_experience3.glb", function (gltf) {
   model2 = gltf.scene;
   scene.add(model2);
   model2.scale.set(0.5, 0.5, 0.5);
@@ -79,7 +81,7 @@ loader.load("./models/3d_exp.glb", function (gltf) {
 
 loadingManager.onProgress = function (url, loaded, total) {
   x = Math.ceil((loaded / total) * 100);
-  document.getElementById("loading").innerText = `${x}%`;
+  document.getElementById("loading").innerText = `Loading ${x}%`;
 };
 
 loadingManager.onLoad = function () {
@@ -130,11 +132,20 @@ async function predict() {
   }
   if (prediction[1].probability.toFixed(2) > 0.9) {
     // console.log("up");
+    // gsap.to(lookAtTarget, {
+    //   x: up.x,
+    //   y: up.y,
+    //   z: up.z,
+    //   duration: 1,
+    //   onUpdate: function () {
+    //     camera.lookAt(lookAtTarget.x, lookAtTarget.y, lookAtTarget.z); // Update the camera's lookAt during the animation
+    //   },
+    // });
     gsap.to(lookAtTarget, {
-      x: up.x,
-      y: up.y,
-      z: up.z,
-      duration: 1,
+      x: front.x,
+      y: front.y,
+      z: front.z,
+      duration: 3,
       onUpdate: function () {
         camera.lookAt(lookAtTarget.x, lookAtTarget.y, lookAtTarget.z); // Update the camera's lookAt during the animation
       },
@@ -241,6 +252,7 @@ function animate() {
     runFunc = true;
     run();
   }
+
   renderer.render(scene, camera);
   requestAnimationFrame(animate);
 }
@@ -288,8 +300,9 @@ document.getElementById("tracking").addEventListener("click", async () => {
 });
 
 let vol = true;
-let audio = new Audio("./bg.mp3");
+let audio = new Audio("./music.mp3");
 audio.volume = 0.2;
+audio.loop = true;
 document.getElementById("vol").addEventListener("click", function () {
   if (vol) {
     vol = false;
