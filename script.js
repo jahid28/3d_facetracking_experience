@@ -38,14 +38,12 @@ const assets = {
   music: { loaded: 0, total: 0, done: false, failed: false },
 };
 
-const mb = (bytes) => (bytes / 1048576).toFixed(1);
-
 function assetStatus(a) {
   if (a.failed) return "failed";
   if (a.done) return "ready";
   if (a.building) return "building…";
   if (!a.loaded) return "waiting…";
-  return a.total ? `${mb(a.loaded)} / ${mb(a.total)} MB` : `${mb(a.loaded)} MB`;
+  return a.total ? `${Math.min(99, Math.floor((a.loaded / a.total) * 100))}%` : "loading…";
 }
 
 function renderLoading() {
